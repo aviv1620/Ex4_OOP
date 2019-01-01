@@ -35,7 +35,7 @@ public class Map extends JPanel{
 	/** version 1 maybe forever*/
 	private static final long serialVersionUID = 1L;
 
-	
+
 
 	//varible
 	private Game game;
@@ -94,7 +94,7 @@ public class Map extends JPanel{
 
 		//game and patch
 		paintGame(g, game,width,Height);
-		
+
 	}
 
 	/**
@@ -115,14 +115,18 @@ public class Map extends JPanel{
 			paintPackman(g, game, wWidth, wHeight);		
 			paintGhost(g, game, wWidth, wHeight);
 			paintMe(g, game, wWidth, wHeight);
-			
+			if(MyFrame.CHEATS_DEVELOPER_BLUE)
+				paintDeveloperBlue(g, game, wWidth, wHeight);
+			if(MyFrame.CHEATS_DEVELOPER_RED)
+				paintDeveloperRed(g, game, wWidth, wHeight);
+
 			//statistics						
 			paintStatistics(g,game,wWidth,wHeight);
 		}
-	
+
 	}
 
-	
+
 
 	private void paintFruit(Graphics g,Game game,int wWidth,int wHeight){
 		//fruit
@@ -167,7 +171,7 @@ public class Map extends JPanel{
 	private void paintMe(Graphics g,Game game,int wWidth,int wHeight){
 		//get point and scale
 		Me me = game.getMe();
-		
+
 		Point3D point = Scale.polarPointToImage(me.location);
 		point = Scale.ImageToScreen(point,wWidth,wHeight);
 		int radius = me.radius*50;
@@ -183,7 +187,7 @@ public class Map extends JPanel{
 	}
 
 	private void paintGhost(Graphics g,Game game,int wWidth,int wHeight){
-		
+
 		Iterator<Ghost> packmanIterator = game.iteratorGhost();
 		int num = 0;//some num to get different ghost.
 		while(packmanIterator.hasNext()) {
@@ -201,7 +205,7 @@ public class Map extends JPanel{
 			num++;
 		}
 	}
-	
+
 	private void paintBox(Graphics g,Game game,int wWidth,int wHeight){
 		Iterator<Box> packmanIterator = game.iteratorBox();
 		while(packmanIterator.hasNext()) {
@@ -209,27 +213,27 @@ public class Map extends JPanel{
 			Box box = packmanIterator.next();
 			Point3D point1 = Scale.polarPointToImage(box.location1);
 			point1 = Scale.ImageToScreen(point1,wWidth,wHeight);
-			
+
 			Point3D point2 = Scale.polarPointToImage(box.location2);
 			point2 = Scale.ImageToScreen(point2,wWidth,wHeight);	
-			
+
 			double left = point1.x();
 			double right = point2.x();
 			double top = point2.y();
 			double buttom = point1.y();
 			double width = right - left;
 			double height = buttom - top;
-			
+
 			g.fillRect((int)left, (int)top , (int)width, (int)height);
-			
+
 		}
 	}
-	
+
 	private void paintStatistics(Graphics g, Game game2, int wWidth, int wHeight) {
 		//font not exit the screen.
 		Font f1 = new Font("Consolas", Font.BOLD, wWidth / 35);
 		g.setFont(f1);
-		
+
 		//color by feedback
 		if(game.drawFeedback()) {
 			game.subTftl();
@@ -244,13 +248,61 @@ public class Map extends JPanel{
 			}
 		}else
 			g.setColor(Color.WHITE);
-		
+
 		//draw text
 		g.drawString(game.getStatistics(),0,wHeight);
+
+	}
+
+	private void paintDeveloperBlue(Graphics g, Game game, int wWidth, int wHeight) {
+		//me
+		paintDeveloperPoint(g, wWidth, wHeight, game.getMe().location, Color.BLUE);;
+
+		//fruit
+		Iterator<Fruit> fruitIterator = game.iteratorFruit();
+		while(fruitIterator.hasNext()) {
+			//get point ans scale
+			Fruit fruit= fruitIterator.next();
+			paintDeveloperPoint(g, wWidth, wHeight, fruit.location, Color.BLUE);		
+		}
+
+		//packman
+		Iterator<Packman> packmanIterator = game.iteratorPackmen();
+		while(packmanIterator.hasNext()) {
+			//get point and scale
+			Packman packman = packmanIterator.next();
+			paintDeveloperPoint(g, wWidth, wHeight, packman.location, Color.BLUE);		
+		}
 		
+		//ghost
+		Iterator<Ghost> ghostIterator = game.iteratorGhost();
+		while(ghostIterator.hasNext()) {
+			//get point and scale
+			Ghost ghost = ghostIterator.next();
+			paintDeveloperPoint(g, wWidth, wHeight, ghost.location, Color.BLUE);		
+		}
 	}
 	
-	
+	private void paintDeveloperRed(Graphics g, Game game, int wWidth, int wHeight) {
+		Iterator<Point3D> iterator = game.iteratorDeveloperPoint();
+		while(iterator.hasNext()) {
+			Point3D point3D = iterator.next();
+			paintDeveloperPoint(g, wWidth, wHeight, point3D, Color.RED);		
+		}
+	}
+
+	private void paintDeveloperPoint(Graphics g,int wWidth,int wHeight,Point3D p,Color color) {
+		Point3D point = Scale.polarPointToImage(p);
+		point = Scale.ImageToScreen(point,wWidth,wHeight);		
+		int radius = 5;
+
+		//draw .
+		g.setColor(color);
+		g.drawOval(((int)point.x() - radius/2), (int)(point.y() - radius/2), radius, radius);
+		g.fillOval((int)point.x() - radius/2, (int)point.y() - radius/2, radius, radius);
+	}
+
+
 	private BufferedImage getGhost(int num) {
 
 		switch (num % 4) {

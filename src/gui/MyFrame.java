@@ -23,7 +23,7 @@ import Robot.Play;
 import algorithms.ParsePlay;
 import algorithms.Scale;
 import gis.packmanModel.Game;
-import threads.PlayManualRunnable;
+import threads.PlayRunnable;
 import threads.SimplePlayer;
 
 
@@ -42,10 +42,13 @@ public class MyFrame extends JFrame {
 	private boolean gameEnd = false;
 	private Play play;	
 	private Game game;
-	private PlayManualRunnable playManualRunnable;
+	private PlayRunnable playManualRunnable;
 	private Map map = new Map(); 
 	private JFileChooser fc = new JFileChooser();
 	private FileNameExtensionFilter filterCSV;
+	
+	public static boolean CHEATS_DEVELOPER_BLUE = false;
+	public static boolean CHEATS_DEVELOPER_RED = false;
 
 	/**
 	 * configured all the buttons and gui setting.
@@ -130,21 +133,31 @@ public class MyFrame extends JFrame {
 	
 	/**
 	 * cheats allow to control the speed of the game.
+	 * and more
 	 * @param keyChar - key from keyboard.
 	 */
 	private void keyTyped(char keyChar) {
 		switch (keyChar) {
 		case '0':
-			PlayManualRunnable.SLEEP = 15;
+			PlayRunnable.SLEEP = 15;
 			break;
 		case '1':
-			PlayManualRunnable.SLEEP = 1;
+			PlayRunnable.SLEEP = 1;
 			break;
 		case '2':
-			PlayManualRunnable.SLEEP = 30;
+			PlayRunnable.SLEEP = 30;
 			break;
 		case '3':
-			PlayManualRunnable.SLEEP = 100;
+			PlayRunnable.SLEEP = 100;
+			break;
+		case '4':
+			PlayRunnable.SLEEP = 1000;
+			break;
+		case '5':
+			CHEATS_DEVELOPER_BLUE = !CHEATS_DEVELOPER_BLUE;
+			break;
+		case '6':
+			CHEATS_DEVELOPER_RED = !CHEATS_DEVELOPER_RED;
 			break;
 		}
 	}
@@ -227,10 +240,14 @@ public class MyFrame extends JFrame {
 	}
 
 	private void itemPlayAuto() {
-		System.out.println("itemitemPlayAutu");
+		play(false);
 	}
 
-	private void itemPlayManual() {
+	private void itemPlayManual() {		
+		play(true);
+	}
+	
+	private void play(boolean manual) {
 		if(game == null || play == null) {
 			System.out.println("please load example");
 			return;
@@ -243,11 +260,10 @@ public class MyFrame extends JFrame {
 		}
 		
 		//start game
-		playManualRunnable = new PlayManualRunnable(this, game, play);
+		playManualRunnable = new PlayRunnable(this, game, play,manual);
 		Thread t = new Thread(playManualRunnable);
 		t.setName("play_manual");
 		t.start();
-		
 	}
 
 	public void startGame() {

@@ -3,7 +3,6 @@ package algorithms;
 import javax.swing.JPanel;
 
 import Geom.Point3D;
-import gui.Map;
 
 /**
  * polar point to image map,

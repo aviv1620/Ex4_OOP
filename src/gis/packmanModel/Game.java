@@ -14,6 +14,7 @@ public class Game {
 	private ArrayList<Fruit> fruits;
 	private ArrayList<Ghost> ghosts;
 	private ArrayList<Box> boxs;
+	private ArrayList<Point3D> developerPoint;
 	private Me me;
 	
 	private int time;
@@ -83,6 +84,11 @@ public class Game {
 	/** @param box - box to add.*/
 	public void addBox(Box box) {
 		boxs.add(box);
+	}
+	
+	/** @param developerPoint - developerPoint to add.*/
+	public void addDeveloperPoint(Point3D point) {
+		developerPoint.add(point);
 	}
 		
 	
@@ -197,12 +203,18 @@ public class Game {
 		return boxs.iterator();
 	}
 	
+	/**@return Iterator to developer point.*/
+	public Iterator<Point3D> iteratorDeveloperPoint(){
+		return developerPoint.iterator();
+	}
+	
 	/**clear the data structures*/
 	public void clear() {
 		packmens = new ArrayList<Packman>();
 		fruits = new ArrayList<Fruit>();
 		ghosts = new ArrayList<Ghost>();
 		boxs = new ArrayList<Box>();
+		developerPoint = new ArrayList<Point3D>();
 		me = null;
 		
 	}

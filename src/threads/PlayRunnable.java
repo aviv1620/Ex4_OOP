@@ -3,6 +3,7 @@ package threads;
 import Geom.Point3D;
 import Robot.Play;
 import algorithms.ParsePlay;
+import algorithms.PlayAuto;
 import algorithms.Scale;
 import coords.MyCoords;
 import gis.packmanModel.Game;
@@ -13,7 +14,7 @@ import gui.MyFrame;
  * @author Aviv Vexler
  *
  */
-public class PlayManualRunnable implements Runnable {
+public class PlayRunnable implements Runnable {
 
 	public static int SLEEP = 15;
 
@@ -21,21 +22,23 @@ public class PlayManualRunnable implements Runnable {
 	private Game game;
 	private Play play;
 	private double angale;
+	private boolean manual;
 	private MyCoords myCoords = MyCoords.GET_MY_COORDS();
 
 	private Point3D mouse;
 
-	public PlayManualRunnable(MyFrame frame, Game game, Play play) {
+	public PlayRunnable(MyFrame frame, Game game, Play play,boolean manual) {
 		this.frame = frame;
 		this.game = game;
 		this.play = play;
+		this.manual = manual;
 	}
 
 	public void mouseMoved(int x,int y) {		
 		mouse = new Point3D(x,y,0);		
 	}
 
-	private void angaleCalculate() {
+	private void angaleManualCalculate() {
 		if(game.getMe() == null || mouse == null)
 			return;
 		
@@ -72,7 +75,10 @@ public class PlayManualRunnable implements Runnable {
 			ParsePlay.parseStatistics(play, game);			
 
 			ParsePlay.parseBoard(play, game);
-			angaleCalculate();//must called after parseBoard
+			if(manual)
+				angaleManualCalculate();//must called after parseBoard
+			else
+				PlayAuto.execute(game);
 			frame.repaint();
 
 			try {

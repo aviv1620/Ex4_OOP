@@ -28,6 +28,8 @@ public class Box {
 	public String toString() {
 		return "Box [id=" + id + ", location1=" + location1 + ", location2=" + location2 + "]";
 	}
+	
+
 
 	
 
