@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import Geom.Point3D;
 /**
- * store packmans and fruits
+ * game data structures.
  * @author Aviv Vexler
  *
  */
@@ -17,6 +17,7 @@ public class Game {
 	private ArrayList<Point3D> developerPoint;
 	private ArrayList<Double> verticalLines;
 	private ArrayList<Double> horizontalLines;
+	private ArrayList<PathPoint> path;
 	private Me me;
 	
 	private int time;
@@ -101,6 +102,11 @@ public class Game {
 	/** @param Horizontal - Horizontal to add.*/
 	public void addHorizontalLine(double v) {
 		horizontalLines.add(v);
+	}
+	
+	/** @param PathPoint - PathPoint to add.*/
+	public void addPathPoint(PathPoint point) {
+		path.add(point);
 	}
 		
 	
@@ -230,6 +236,11 @@ public class Game {
 		return horizontalLines.iterator();
 	}
 	
+	/**@return path to Horizontal line.*/
+	public Iterator<PathPoint> iteratorPath (){
+		return path.iterator();
+	}
+	
 	/**clear the data structures*/
 	public void clear() {
 		packmens = new ArrayList<Packman>();
@@ -239,8 +250,13 @@ public class Game {
 		developerPoint = new ArrayList<Point3D>();
 		verticalLines = new ArrayList<Double>();
 		horizontalLines =  new ArrayList<Double>();
+		path = new ArrayList<PathPoint>();
 		me = null;
 		
+	}
+	
+	public void clearPathPoint() {
+		path = new ArrayList<PathPoint>();
 	}
 	
 	/** @return size packman*/

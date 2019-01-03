@@ -22,6 +22,7 @@ import gis.packmanModel.Game;
 import gis.packmanModel.Ghost;
 import gis.packmanModel.Me;
 import gis.packmanModel.Packman;
+import gis.packmanModel.PathPoint;
 
 /**
  * 
@@ -117,8 +118,10 @@ public class Map extends JPanel{
 			paintMe(g, game, wWidth, wHeight);
 			if(MyFrame.CHEATS_DEVELOPER_BLUE)
 				paintDeveloperBlue(g, game, wWidth, wHeight);
-			if(MyFrame.CHEATS_DEVELOPER_RED)
+			if(MyFrame.CHEATS_DEVELOPER_RED) {
 				paintDeveloperRed(g, game, wWidth, wHeight);
+				paintDeveloperPatchLine(g, game, wWidth, wHeight);
+			}
 			if(MyFrame.CHEATS_DEVELOPER_LINE)
 				paintDeveloperLine(g, game, wWidth, wHeight);
 			
@@ -127,6 +130,7 @@ public class Map extends JPanel{
 		}
 
 	}
+
 
 
 
@@ -302,6 +306,24 @@ public class Map extends JPanel{
 		g.setColor(color);
 		g.drawOval(((int)point.x() - radius/2), (int)(point.y() - radius/2), radius, radius);
 		g.fillOval((int)point.x() - radius/2, (int)point.y() - radius/2, radius, radius);
+	}
+	
+
+	private void paintDeveloperPatchLine(Graphics g, Game game2, int wWidth, int wHeight) {
+		Iterator<PathPoint> iterator = game.iteratorPath();
+		while(iterator.hasNext()) {
+			PathPoint pathPoint = iterator.next();
+			
+			Point3D p1 = Scale.polarPointToImage(pathPoint.pa);
+			p1 = Scale.ImageToScreen(p1,wWidth,wHeight);
+			
+			Point3D p2 = Scale.polarPointToImage(pathPoint.pb);
+			p2 = Scale.ImageToScreen(p2,wWidth,wHeight);
+			
+			g.setColor(Color.BLUE);
+			g.drawLine((int)p1.x(),(int)p1.y(),(int)p2.x(),(int)p2.y());								
+		}
+		
 	}
 	
 	private void paintDeveloperLine(Graphics g, Game game, int wWidth, int wHeight) {

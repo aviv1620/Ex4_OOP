@@ -15,52 +15,108 @@ import gis.packmanModel.Fruit;
 import gis.packmanModel.Game;
 import gis.packmanModel.Ghost;
 import gis.packmanModel.Packman;
+import gis.packmanModel.PathPoint;
 import gui.MyFrame;
-
+/**
+ * algorithm player.
+ * please see the document "the algorithm" in github wiki..
+ * @author Aviv Vexler
+ *
+ */
 public class PlayAuto {
-	public static int nodeID;
+	/** distance Me need save between the ghost*/
 	public static double ghostD = 0.00009;
-	public static boolean  ghost = false;
+	/** get out of ghost*/
+	public static boolean  ghost = true;
 
+	/**
+	 * execute all the algorithm and return the azimuth player need to go.
+	 * @param game - game data structures
+	 * @return angle when Me go.
+	 */
 	public static double execute(Game game) {
 		synchronized (game) {
-
-
-
-			nodeID = 0;
+			//makeNodes
 			ArrayList<Node> nodes = makeNodes(game);
+			
 			//see node on map and add to graph
 			Graph graph = new Graph();		
 			for(Node n:nodes) {
 				game.addDeveloperPoint(n.point);
 				graph.addNode(n);
 			}
-
+			
+			//Dijkstra
 			graph = Dijkstra.calculateShortestPathFromSource(graph, nodes.get(0));
 
+			//find shorted Path.
 			int distance = Integer.MAX_VALUE;
-
-			double angle = 0;//FIXME
+			double angle = 0;
 
 			Iterator<Node> nodesIter =  graph.getNodes().iterator();
 			while(nodesIter.hasNext()) {
 				Node node = nodesIter.next();
 
+				//need go when flag is true.
 				if(node.flag) {
 					if(node.getDistance() <= distance) {
 						distance = node.getDistance();
 
+						//inform case not need to happen.
+						if(node.getShortestPath().size() == 0)
+							System.out.println("zero nodes");
+						
+						//calculate azimuth
 						Point3D pa = game.getMe().location;
 						Point3D pb = firstPoint(node);
 
-						angle = MyCoords.GET_MY_COORDS().azimuth(pa, pb);			
-					}								
+						angle = MyCoords.GET_MY_COORDS().azimuth(pa, pb);
+
+						if(MyFrame.CHEATS_DEVELOPER_RED)
+							drawPath(node,game);
+					}
 				}
-			}			
+			}	
+			
 			return angle;
 		}
 	}
 
+	/**
+	 * if cheat enable draw patch on the map.
+	 * @param node - node
+	 * @param game - game
+	 */
+	private static void drawPath(Node node,Game game) {				
+		List<Node> list = node.getShortestPath();
+		
+		//Special case
+		if(list.size() == 0) 			
+			return;
+		
+		//insert points
+		game.clearPathPoint();
+		for (int i = 1; i < list.size(); i++) {
+			Point3D p1 = list.get(i-1).point;
+			Point3D p2 = list.get(i).point;
+			PathPoint pathPoint = new PathPoint(p1, p2);
+			game.addPathPoint(pathPoint);
+		}
+		
+		//lest point
+		Point3D p1 = list.get( list.size() - 1 ).point;
+		Point3D p2 = node.point;
+		PathPoint pathPoint = new PathPoint(p1, p2);
+		game.addPathPoint(pathPoint);
+
+	}
+
+	/**
+	 * return the first point.
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param node some Node
+	 * @return the first point
+	 */
 	private static Point3D firstPoint(Node node) {
 		List<Node> list = node.getShortestPath();
 		if(list.size() > 1)
@@ -70,6 +126,12 @@ public class PlayAuto {
 
 	}
 
+	/**
+	 * make the nodes.
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param game - some game
+	 * @return Nodes
+	 */
 	private static ArrayList<Node> makeNodes(Game game) {
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		buildNodes(nodes,game);
@@ -77,7 +139,13 @@ public class PlayAuto {
 		destinationNodes(nodes,game);
 		return nodes;
 	}	
-
+	
+	/**
+	 * build the nodes
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param nodes - empty array list.
+	 * @param game - some game
+	 */
 	private static void buildNodes(ArrayList<Node> nodes, Game game) {
 		//me
 		nodes.add(new Node("Me",false,game.getMe().location));
@@ -105,10 +173,10 @@ public class PlayAuto {
 
 			double d = 0.00001;
 
-			nodes.add(new Node("box "+nodeID, false, new Point3D(top + d,left - d)));
-			nodes.add(new Node("box "+nodeID, false, new Point3D(buttom - d,left - d)));
-			nodes.add(new Node("box "+nodeID, false, new Point3D(top + d, right + d)));
-			nodes.add(new Node("box "+nodeID, false, new Point3D(buttom - d, right + d)));
+			nodes.add(new Node("box ", false, new Point3D(top + d,left - d)));
+			nodes.add(new Node("box ", false, new Point3D(buttom - d,left - d)));
+			nodes.add(new Node("box ", false, new Point3D(top + d, right + d)));
+			nodes.add(new Node("box ", false, new Point3D(buttom - d, right + d)));
 		}
 
 		//builde 4 nodes to any ghost
@@ -118,19 +186,31 @@ public class PlayAuto {
 				Ghost ghost = iteratorG.next();
 
 				double x = ghost.location.x();
-				double y = ghost.location.y();
+				double y = ghost.location.y();								
 
 				double d = ghostD+0.00001;
-				nodes.add(new Node("ghost", false, new Point3D(x - d,y - d)));
-				nodes.add(new Node("ghost", false, new Point3D(x + d,y - d)));
-				nodes.add(new Node("ghost", false, new Point3D(x - d,y + d)));
-				nodes.add(new Node("ghost", false, new Point3D(x + d,y + d)));
+				
+				double left = y - d;
+				double right = y + d;
+				double top = x + d;
+				double bottom = x - d;				
+				
+				nodes.add(new Node("ghost", false, new Point3D(top,left)));
+				nodes.add(new Node("ghost", false, new Point3D(top,right)));
+				nodes.add(new Node("ghost", false, new Point3D(bottom,left)));
+				nodes.add(new Node("ghost", false, new Point3D(bottom,right)));
 			}
 		}
 
 
 	}
 
+	/**
+	 * remove nodes inside box.
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param nodes - empty array list.
+	 * @param game - some game.
+	 */
 	private static void removeBoxNodes(ArrayList<Node> nodes, Game game) {
 		for (int i = 0; i < nodes.size(); i++) {
 			//don't delete Me
@@ -185,6 +265,12 @@ public class PlayAuto {
 
 	}
 
+	/**
+	 * destination the nodes.
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param nodes - empty array list.
+	 * @param game - some game.
+	 */
 	private static void destinationNodes(ArrayList<Node> nodes, Game game) {
 
 		for (int i = 0; i < nodes.size(); i++) {
@@ -197,22 +283,33 @@ public class PlayAuto {
 				Point3D pb = nodes.get(j).point;
 
 				//debug test 
-				/*				if(nodes.get(i).getName().equals("Me") &&
+				/*if(nodes.get(i).getName().equals("Me") &&
 						nodes.get(j).getName().equals("fruit"))
 					System.out.println("debug");*/
 
+				//destination if not have Box in the middle.
 				if( !isBoxMiddle( pa,pb,game ) ) {
 					double distance = MyCoords.GET_MY_COORDS().distance3d(pa, pb);
-					int disInt = (int)(distance * 1000000);
-					//System.out.println(nodes.get(i).getName() + " to " +
-					//	nodes.get(j).getName() + " dis "+disInt + " distance " + distance);
+					int disInt = (int)(distance * 100);
+					
 					nodes.get(i).addDestination(nodes.get(j), disInt);
+					///debug test a-v-i-v-v-e-x-l-e-r
+					//System.out.println(nodes.get(i).getName() + " to " + 
+					//	nodes.get(j).getName() + " dis "+disInt + " distance " + distance);
 				}
 			}
 		}
 
 	}
 
+	/**
+	 * inform if have box in the middle.
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param pa - some polar point.
+	 * @param pb - some polar point.
+	 * @param game - some game.
+	 * @return true if have box in the middle.
+	 */
 	private static boolean isBoxMiddle(Point3D pa, Point3D pb, Game game) {
 		double ax = pa.x();
 		double ay = pa.y();
@@ -228,7 +325,7 @@ public class PlayAuto {
 			double right = box.getRight();
 			double top = box.getTop();
 			double bottom = box.getButtom();
-
+			
 			if(isRectangleMiddle(pa, pb, game, ax, ay, bx, by, left, right, top, bottom))
 				return true;
 
@@ -246,6 +343,12 @@ public class PlayAuto {
 				double top = ghost.location.x() + ghostD;
 				double bottom = ghost.location.x() - ghostD;
 
+				//if me inside ghost
+				double MeX = game.getMe().location.x();
+				double MeY = game.getMe().location.y();
+				if(left < MeY && MeY <right && bottom < MeX && MeX < top)
+					continue;
+				
 				if(isRectangleMiddle(pa, pb, game, ax, ay, bx, by, left, right, top, bottom))
 					return true;
 
@@ -255,6 +358,23 @@ public class PlayAuto {
 		return false;
 	}
 
+	/**
+	 * inform if have box in the middle.
+	 * part of isBoxMiddle().
+	 * see the document "the algorithm" in Github Wiki for more detail.
+	 * @param pa - some point.
+	 * @param pb - some point.
+	 * @param game - some game.
+	 * @param ax - x of pa.
+	 * @param ay - y of pa.
+	 * @param bx - x of pb.
+	 * @param by - y of pa.
+	 * @param left - left box
+	 * @param right - right box.
+	 * @param top - top box.
+	 * @param bottom - bottom box.
+	 * @return true if have box in the middle.
+	 */
 	private static boolean isRectangleMiddle(Point3D pa, Point3D pb, Game game,
 			double ax ,
 			double ay ,

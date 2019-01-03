@@ -84,6 +84,11 @@ public class ParsePlay {
 	}
 
 
+	/**
+	 * get statistics from play class and parse to string that show on the screen.
+	 * @param play - play class.
+	 * @param game - game class.
+	 */
 	public static synchronized void parseStatistics(Play play,Game game) {
 		String info = play.getStatistics();			
 		StringTokenizer fields = new StringTokenizer(info, ","); 
