@@ -49,6 +49,7 @@ public class MyFrame extends JFrame {
 	
 	public static boolean CHEATS_DEVELOPER_BLUE = false;
 	public static boolean CHEATS_DEVELOPER_RED = false;
+	public static boolean CHEATS_DEVELOPER_LINE = false;
 
 	/**
 	 * configured all the buttons and gui setting.
@@ -158,6 +159,9 @@ public class MyFrame extends JFrame {
 			break;
 		case '6':
 			CHEATS_DEVELOPER_RED = !CHEATS_DEVELOPER_RED;
+			break;
+		case '7':
+			CHEATS_DEVELOPER_LINE = !CHEATS_DEVELOPER_LINE;
 			break;
 		}
 	}

@@ -88,7 +88,7 @@ public class Map extends JPanel{
 	protected void paintComponent(Graphics g) {						
 		int width = getWidth();
 		int Height = getHeight();
-
+		
 		//map		
 		g.drawImage(imgMap, 0, 0,width,Height, null);				
 
@@ -119,7 +119,9 @@ public class Map extends JPanel{
 				paintDeveloperBlue(g, game, wWidth, wHeight);
 			if(MyFrame.CHEATS_DEVELOPER_RED)
 				paintDeveloperRed(g, game, wWidth, wHeight);
-
+			if(MyFrame.CHEATS_DEVELOPER_LINE)
+				paintDeveloperLine(g, game, wWidth, wHeight);
+			
 			//statistics						
 			paintStatistics(g,game,wWidth,wHeight);
 		}
@@ -301,16 +303,47 @@ public class Map extends JPanel{
 		g.drawOval(((int)point.x() - radius/2), (int)(point.y() - radius/2), radius, radius);
 		g.fillOval((int)point.x() - radius/2, (int)point.y() - radius/2, radius, radius);
 	}
+	
+	private void paintDeveloperLine(Graphics g, Game game, int wWidth, int wHeight) {
+		
+		Iterator<Double> verticalIterator = game.iteratorVerticalLine();
+		while(verticalIterator.hasNext()) {
+			Double vertical = verticalIterator.next();
+			
+			Point3D point = Scale.polarPointToImage(new Point3D(32.10541402781818,vertical));
+			point = Scale.ImageToScreen(point,wWidth,wHeight);	
+			vertical = point.x();			
+
+			g.setColor(Color.BLUE);
+			g.drawLine(vertical.intValue(),0,vertical.intValue(),wHeight);									
+			
+		}
+		
+		Iterator<Double> horizontalterator = game.iteratorHorizontal();
+		while(horizontalterator.hasNext()) {
+			Double horizontal = horizontalterator.next();
+			
+			Point3D point = Scale.polarPointToImage(new Point3D(horizontal,35.20281754867361));
+			point = Scale.ImageToScreen(point,wWidth,wHeight);	
+			horizontal = point.y();			
+
+			g.setColor(Color.BLUE);
+			g.drawLine(0,horizontal.intValue(),wWidth,horizontal.intValue());									
+		}
+			
+		
+		
+	}
 
 
 	private BufferedImage getGhost(int num) {
 
 		switch (num % 4) {
-		case 0:
+		case 2:
 			return imgBlinky;
 		case 1:
 			return imgClyde;
-		case 2:
+		case 0:
 			return imgInky;
 		default:
 			return imgPinky;

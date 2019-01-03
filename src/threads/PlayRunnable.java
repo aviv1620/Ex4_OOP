@@ -78,7 +78,7 @@ public class PlayRunnable implements Runnable {
 			if(manual)
 				angaleManualCalculate();//must called after parseBoard
 			else
-				PlayAuto.execute(game);
+				angale = PlayAuto.execute(game);
 			frame.repaint();
 
 			try {
@@ -86,6 +86,7 @@ public class PlayRunnable implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 		}		
 
 		//stop

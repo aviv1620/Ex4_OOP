@@ -29,7 +29,21 @@ public class Box {
 		return "Box [id=" + id + ", location1=" + location1 + ", location2=" + location2 + "]";
 	}
 	
-
+	public double getTop() {
+		return location2.x();
+	}
+	
+	public double getRight() {
+		return location2.y();
+	}
+	
+	public double getLeft() {
+		return location1.y();
+	}
+	
+	public double getButtom() {
+		return location1.x();
+	}
 
 	
 

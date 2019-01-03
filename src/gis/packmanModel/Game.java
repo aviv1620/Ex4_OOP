@@ -15,6 +15,8 @@ public class Game {
 	private ArrayList<Ghost> ghosts;
 	private ArrayList<Box> boxs;
 	private ArrayList<Point3D> developerPoint;
+	private ArrayList<Double> verticalLines;
+	private ArrayList<Double> horizontalLines;
 	private Me me;
 	
 	private int time;
@@ -89,6 +91,16 @@ public class Game {
 	/** @param developerPoint - developerPoint to add.*/
 	public void addDeveloperPoint(Point3D point) {
 		developerPoint.add(point);
+	}
+	
+	/** @param VerticaLine - VerticaLine to add.*/
+	public void addVerticaLine(double v) {
+		verticalLines.add(v);
+	}
+	
+	/** @param Horizontal - Horizontal to add.*/
+	public void addHorizontalLine(double v) {
+		horizontalLines.add(v);
 	}
 		
 	
@@ -208,6 +220,16 @@ public class Game {
 		return developerPoint.iterator();
 	}
 	
+	/**@return Iterator to VerticalLine.*/
+	public Iterator<Double> iteratorVerticalLine(){
+		return verticalLines.iterator();
+	}
+	
+	/**@return Iterator to Horizontal line.*/
+	public Iterator<Double> iteratorHorizontal (){
+		return horizontalLines.iterator();
+	}
+	
 	/**clear the data structures*/
 	public void clear() {
 		packmens = new ArrayList<Packman>();
@@ -215,6 +237,8 @@ public class Game {
 		ghosts = new ArrayList<Ghost>();
 		boxs = new ArrayList<Box>();
 		developerPoint = new ArrayList<Point3D>();
+		verticalLines = new ArrayList<Double>();
+		horizontalLines =  new ArrayList<Double>();
 		me = null;
 		
 	}

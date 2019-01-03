@@ -123,6 +123,15 @@ public class MyCoords implements coords_converter {
 		
 		return ans;
 	}
+	
+	public double azimuth(Point3D a,Point3D b) {
+		
+		try {
+			return azimuth_elevation_dist(a, b)[0];
+		}catch (Exception e) {
+			return 0;
+		}
+	}
 
 	/** @see Coords.coords_converter#isValid_GPS_Point(Geom.Point3D) */
 	@Override
