@@ -1,14 +1,11 @@
 package gui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
@@ -38,14 +35,16 @@ public class MyFrame extends JFrame {
 	private JMenuItem itemLoad;
 	private JMenuItem itemPlayManual;
 	private JMenuItem itemPlayAuto;
+	private JMenuItem itemLeaderboard;
 
 	private boolean gameEnd = false;
 	private Play play;	
 	private Game game;
-	private PlayRunnable playManualRunnable;
+	private PlayRunnable playRunnable;
 	private Map map = new Map(); 
 	private JFileChooser fc = new JFileChooser();
 	private FileNameExtensionFilter filterCSV;
+	private double gameID = 0;
 	
 	public static boolean CHEATS_DEVELOPER_BLUE = false;
 	public static boolean CHEATS_DEVELOPER_RED = false;
@@ -60,24 +59,28 @@ public class MyFrame extends JFrame {
 	 */
 	public MyFrame(int w,int h) throws IOException{
 		//play music
-		//SimplePlayer player = new SimplePlayer("resources/Pokemon Theme Song (8-Bit).mp3");
-		//Thread t = new Thread(player);
-		//t.start();				
+		SimplePlayer player = new SimplePlayer("resources/Pokemon Theme Song (8-Bit).mp3");
+		Thread t = new Thread(player);
+		t.start();				
 
 		//menu
 		menuBar = new JMenuBar();								
 		itemLoad = new JMenuItem("Load");		
 		itemPlayManual = new JMenuItem("play manual");	
-		itemPlayAuto = new JMenuItem("play auto");	
+		itemPlayAuto = new JMenuItem("play auto");
+		itemLeaderboard = new JMenuItem("Leaderboard");
 
 		menuBar.add(itemLoad);
 		menuBar.add(itemPlayManual);
-		menuBar.add(itemPlayAuto);		
+		menuBar.add(itemPlayAuto);	
+		menuBar.add(itemLeaderboard);	
 		
 		itemLoad.addActionListener( (ActionEvent e) -> itemLoad() );
 		itemPlayManual.addActionListener((ActionEvent e) -> itemPlayManual() );
-		itemPlayAuto.addActionListener((ActionEvent e) -> itemPlayAuto());	
-
+		itemPlayAuto.addActionListener((ActionEvent e) -> itemPlayAuto());
+		itemLeaderboard.addActionListener((ActionEvent e) -> itemLeaderboard());
+		itemLeaderboard.setEnabled(false);
+		
 		//gui
 		setJMenuBar(menuBar);
 		add(map);
@@ -115,7 +118,7 @@ public class MyFrame extends JFrame {
 		Runnable runnable = () -> itemLoad();
 		new Thread(runnable).start();
 		
-		//key
+		//Keyboard input.
 		addKeyListener(new KeyAdapter() {					
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -124,6 +127,8 @@ public class MyFrame extends JFrame {
 		});
 
 	}	
+
+	
 
 	/** update the map in new patch and game and repaint*/
 	@Override
@@ -189,12 +194,15 @@ public class MyFrame extends JFrame {
 
 	}
 	
+	/**game end. reset the board and all what's i need.*/
 	private void reset() {
 		gameEnd = false;
+		gameID = 0;
+		itemLeaderboard.setEnabled(false);
 		
 		play = null;
 		game = null;
-		playManualRunnable = null;
+		playRunnable = null;
 		repaint();
 		
 		itemLoad.setEnabled(true);
@@ -209,8 +217,8 @@ public class MyFrame extends JFrame {
 	 *  @param y - y axis in mouse.
 	 */
 	private void mouseMoved(int x,int y) {		
-		if(playManualRunnable != null)
-			playManualRunnable.mouseMoved(x,y);
+		if(playRunnable != null)
+			playRunnable.mouseMoved(x,y);
 
 	}
 
@@ -229,6 +237,8 @@ public class MyFrame extends JFrame {
 			play = new Play(file.getPath());
 			play.setIDs(312129331);
 			ParsePlay.parseBoard(play, game);
+			gameID = play.getHash1();
+			itemLeaderboard.setEnabled(true);
 			repaint();
 		}
 
@@ -243,14 +253,26 @@ public class MyFrame extends JFrame {
 		//a>v>i>v>v>e>x>l>e>r.
 	}
 
+	/**  called when user press "Play Auto" button. */
 	private void itemPlayAuto() {
 		play(false);
 	}
 
+	/**  called when user press "Play Manual" button. */
 	private void itemPlayManual() {		
 		play(true);
 	}
 	
+	/**  called when user press "Leaderboard" button. */
+	private void itemLeaderboard() {
+		if(gameID != 0)
+			new LeaderboardFrame(gameID);
+	}
+	
+	/** 
+	 * 
+	 * @param manual play manual or automate.
+	 */
 	private void play(boolean manual) {
 		if(game == null || play == null) {
 			System.out.println("please load example");
@@ -264,23 +286,36 @@ public class MyFrame extends JFrame {
 		}
 		
 		//start game
-		playManualRunnable = new PlayRunnable(this, game, play,manual);
-		Thread t = new Thread(playManualRunnable);
+		playRunnable = new PlayRunnable(this, game, play,manual);
+		Thread t = new Thread(playRunnable);
 		t.setName("play_manual");
 		t.start();
 	}
 
+	/**
+	 * PlayRunnable,thread run the game ,
+	 * call startGame when is start and stopGame when is stop. 
+	 */
 	public void startGame() {
 		itemLoad.setEnabled(false);
 		itemPlayAuto.setEnabled(false);
 		itemPlayManual.setEnabled(false);
 	}
 
+	/**
+	 * PlayRunnable,thread run the game ,
+	 * call startGame when is start and stopGame when is stop. 
+	 */
 	public void stopGame() {
 		gameEnd = true;
 		System.out.println("End.\npress on the map to reset.");
 	}
 	
+	/**
+	 * hold width and height for the map.
+	 * some class need it.
+	 * @return map
+	 */
 	public JPanel getMap() {
 		return map;
 	}

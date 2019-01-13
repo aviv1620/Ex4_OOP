@@ -20,6 +20,7 @@ public class Game {
 	private ArrayList<PathPoint> path;
 	private Me me;
 	
+	//game static
 	private int time;
 	private int score;
 	private int kbg;//kill by ghosts
@@ -30,6 +31,9 @@ public class Game {
 	private Feedback feedback;
 	private int tftl;//time feedback to leave.
 	
+	/**
+	 * clear data and satrt
+	 */
 	public Game() {
 		clear();		
 	}		
@@ -255,6 +259,8 @@ public class Game {
 		
 	}
 	
+	/**
+	 * use it just if cheat enable.*/
 	public void clearPathPoint() {
 		path = new ArrayList<PathPoint>();
 	}

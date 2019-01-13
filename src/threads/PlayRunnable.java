@@ -16,6 +16,7 @@ import gui.MyFrame;
  */
 public class PlayRunnable implements Runnable {
 
+	/** time to wait between steps. can change by cheats */
 	public static int SLEEP = 15;
 
 	private MyFrame frame;//to repaint,start and stop.
@@ -27,6 +28,13 @@ public class PlayRunnable implements Runnable {
 
 	private Point3D mouse;
 
+	/**
+	 * build PlayRunnable.
+	 * @param frame - main class of the game.
+	 * @param game - game data structures.
+	 * @param play - the server.
+	 * @param manual - true = manual false = play auto.
+	 */
 	public PlayRunnable(MyFrame frame, Game game, Play play,boolean manual) {
 		this.frame = frame;
 		this.game = game;
@@ -34,10 +42,20 @@ public class PlayRunnable implements Runnable {
 		this.manual = manual;
 	}
 
+	/**
+	 * insert point to mouse variable.
+	 * if game play manual Me(pink packman) go to this azimute.
+	 * @param x x mouse point.
+	 * @param y y mouse point.
+	 */
 	public void mouseMoved(int x,int y) {		
 		mouse = new Point3D(x,y,0);		
 	}
 
+	/**
+	 * calculate the angle by mouse point.
+	 * angle save in private variable.
+	 */
 	private void angaleManualCalculate() {
 		if(game.getMe() == null || mouse == null)
 			return;
@@ -59,6 +77,9 @@ public class PlayRunnable implements Runnable {
 		}
 	}
 
+	/**
+	 * run the game.
+	 * 	 */
 	@Override
 	public void run() {				
 		//start
@@ -71,16 +92,18 @@ public class PlayRunnable implements Runnable {
 		while(play.isRuning()) {			
 			play.rotate(angale);
 
-			// 7.2) get the current score of the game
+			//get the current score of the game and parse score.
 			ParsePlay.parseStatistics(play, game);			
-
 			ParsePlay.parseBoard(play, game);
+			
+			//calculate the angale
 			if(manual)
 				angaleManualCalculate();//must called after parseBoard
 			else
 				angale = PlayAuto.execute(game);
 			frame.repaint();
 
+			//wait before next step.
 			try {
 				Thread.sleep(SLEEP);
 			} catch (InterruptedException e) {
