@@ -123,7 +123,7 @@ public class LeaderboardFrame extends JFrame {
 
 	//test just table
 	/*public static void main(String[] args) {
-		new LeaderboardFrame(1.193961129E9);
+		new LeaderboardFrame(1.193961129E9);/a-v-i-v-v-e-x-l-e-r
 	}*/
 
 }

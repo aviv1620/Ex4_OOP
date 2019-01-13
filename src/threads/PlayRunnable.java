@@ -9,8 +9,11 @@ import coords.MyCoords;
 import gis.packmanModel.Game;
 import gui.MyFrame;
 /**
- * in this way i succeed to get 15 score in exemple 8.
- * and in slow motion cheat
+ * play the game.
+ * 
+ * in auto mod i succeed to get 25 scores in exemple 8.
+ * in manual mod i succeed to get 15 scores in exemple 8.
+ * and in use slow motion cheat.
  * @author Aviv Vexler
  *
  */
@@ -79,7 +82,7 @@ public class PlayRunnable implements Runnable {
 
 	/**
 	 * run the game.
-	 * 	 */
+	 * a-v-i-v	 */
 	@Override
 	public void run() {				
 		//start
