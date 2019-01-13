@@ -30,7 +30,9 @@ In Ex4_OOP_example**8** my best score is 29.
 יתרונות של שחקן הממוחשב: מתחמק בקלות מהרוחות. מגיע לפירות בדרך הכי קצרה.
 חסרונות של השחקן הממוחשב: לא יודע מתי עדיף לו לאכול פאקמן או פרי. הולך אוטומטית לנקודה הכי קרובה.
 </p>
+
 # libraries
+
 1. Dijkstra - https://www.baeldung.com/java-dijkstra
 2. Music - JLayer - http://www.javazoom.net/javalayer/sources.html
 3. More - the start point - https://github.com/benmoshe/OOP_EX2-EX4
