@@ -33,8 +33,8 @@ In Ex4_OOP_example**8** my best score is 29.
 חסרונות של השחקן הממוחשב: לא יודע מתי עדיף לו לאכול פאקמן או פרי. הולך אוטומטית לנקודה הכי קרובה.
 </p>
 
-# java doc
-[link](https://github.com/aviv1620/Ex4_OOP/blob/master/doc/index.html) to javadoc.
+# java doc and diagram
+[link](https://github.com/aviv1620/Ex4_OOP/blob/master/doc/index.html) to javadoc. [link](https://raw.githubusercontent.com/aviv1620/Ex4_OOP/master/diagram/frame.gif) to class diagram.
 
 # libraries
 
