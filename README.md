@@ -31,6 +31,6 @@ In Ex4_OOP_example**8** my best score is 29.
 חסרונות של השחקן הממוחשב: לא יודע מתי עדיף לו לאכול פאקמן או פרי. הולך אוטומטית לנקודה הכי קרובה.
 </p>
 # libraries
-Dijkstra - https://www.baeldung.com/java-dijkstra
-Music - JLayer - http://www.javazoom.net/javalayer/sources.html
-More - the start point - https://github.com/benmoshe/OOP_EX2-EX4
+1. Dijkstra - https://www.baeldung.com/java-dijkstra
+2. Music - JLayer - http://www.javazoom.net/javalayer/sources.html
+3. More - the start point - https://github.com/benmoshe/OOP_EX2-EX4
