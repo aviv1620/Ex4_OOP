@@ -9,6 +9,8 @@ Click in some location on the screen.
 Press "play manuel" and play with the mouse.
 Or press "play auto" and the computer play for you.
 see **[manual](https://github.com/aviv1620/Ex4_OOP/wiki/Manual)** for more information
+# The Algorithm
+in the [wiki](https://github.com/aviv1620/Ex4_OOP/wiki/The-Algorithm).
 # my score:
 In Ex4_OOP_example**8** my best score is 29.
 
@@ -30,6 +32,9 @@ In Ex4_OOP_example**8** my best score is 29.
 יתרונות של שחקן הממוחשב: מתחמק בקלות מהרוחות. מגיע לפירות בדרך הכי קצרה.
 חסרונות של השחקן הממוחשב: לא יודע מתי עדיף לו לאכול פאקמן או פרי. הולך אוטומטית לנקודה הכי קרובה.
 </p>
+
+# java doc
+[link](https://github.com/aviv1620/Ex4_OOP/blob/master/doc/index.html) to javadoc.
 
 # libraries
 
