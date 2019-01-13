@@ -34,7 +34,10 @@ In Ex4_OOP_example**8** my best score is 29.
 </p>
 
 # java doc and diagram
-[link](https://github.com/aviv1620/Ex4_OOP/blob/master/doc/index.html) to javadoc. [link](https://raw.githubusercontent.com/aviv1620/Ex4_OOP/master/diagram/frame.gif) to class diagram.
+[link](https://github.com/aviv1620/Ex4_OOP/blob/master/doc/index.html) to javadoc. [link](https://github.com/aviv1620/Ex4_OOP/tree/master/diagram) to class diagram.
+recommended start from [frame](https://raw.githubusercontent.com/aviv1620/Ex4_OOP/master/diagram/frame.gif) diagram
+
+
 
 # libraries
 
