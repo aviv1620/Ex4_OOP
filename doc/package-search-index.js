@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"algorithms"},{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.baeldung.algorithms.ga.dijkstra"},{"l":"coords"},{"l":"gis.packmanModel"},{"l":"gui"},{"l":"threads"}]
